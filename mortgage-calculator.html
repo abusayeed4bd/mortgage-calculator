@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mortgage Calculator</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="mortgage-calculator" style="width: 100%; max-width: 500px; margin: 0 auto; font-family: 'Roboto', sans-serif; padding: 20px; box-sizing: border-box; background-color: #f9f9f9; border-radius: 10px;">
+    <h2 style="text-align: center; margin-bottom: 20px; color: #333;">Mortgage Calculator</h2>
+    <div style="margin-bottom: 15px;">
+      <label for="loan-amount" style="display: block; margin-bottom: 5px; color: #555;">Loan Amount ($):</label>
+      <input type="number" id="loan-amount" placeholder="Enter loan amount" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;" required>
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label for="interest-rate" style="display: block; margin-bottom: 5px; color: #555;">Interest Rate (%):</label>
+      <input type="number" id="interest-rate" placeholder="Enter interest rate (10-15%)" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;" required>
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label for="loan-term" style="display: block; margin-bottom: 5px; color: #555;">Loan Term (years):</label>
+      <input type="number" id="loan-term" placeholder="Enter loan term" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;" required>
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px; color: #555;">Property Tax (annual $): $150 (fixed)</label>
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px; color: #555;">Home Insurance (annual $): $675 (fixed)</label>
+    </div>
+    <button onclick="calculateMortgage()" style="width: 100%; padding: 12px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Calculate</button>
+    <div id="mortgage-result" style="margin-top: 20px; font-weight: bold; text-align: center; color: #333;"></div>
+  </div>
+
+  <script>
+    function calculateMortgage() {
+      var loanAmount = parseFloat(document.getElementById('loan-amount').value);
+      var interestRate = parseFloat(document.getElementById('interest-rate').value) / 100;
+      var loanTerm = parseFloat(document.getElementById('loan-term').value) * 12;
+      var propertyTaxRate = 150;
+      var homeInsurance = 675;
+
+      if (isNaN(loanAmount) || isNaN(interestRate) || isNaN(loanTerm)) {
+        document.getElementById('mortgage-result').innerHTML = 'Please fill in all required fields.';
+        return;
+      }
+
+      if (interestRate < 0.1 || interestRate > 0.15) {
+        document.getElementById('mortgage-result').innerHTML = 'Interest rate must be between 10% and 15%.';
+        return;
+      }
+
+      var monthlyInterest = Math.pow(1 + interestRate / 12, loanTerm);
+      var monthlyPayment = (loanAmount * (interestRate / 12) * monthlyInterest) / (monthlyInterest - 1);
+      var propertyTax = propertyTaxRate / 12;
+      var totalMonthlyPayment = monthlyPayment + propertyTax + (homeInsurance / 12);
+
+      if (isNaN(totalMonthlyPayment)) {
+        document.getElementById('mortgage-result').innerHTML = 'An error occurred. Please check your inputs.';
+      } else {
+        document.getElementById('mortgage-result').innerHTML = 'Monthly Payment (including taxes & insurance): $' + totalMonthlyPayment.toFixed(2);
+      }
+    }
+  </script>
+</body>
+</html>
